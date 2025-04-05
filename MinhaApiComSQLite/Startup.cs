@@ -3,17 +3,17 @@
 // Decompiled with ICSharpCode.Decompiler 8.1.1.7464
 #endregion
 
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.OpenApi.Models;
-using System.Text;
-using System;
-using Microsoft.AspNetCore.Mvc;
-using MinhaApiComSQLite.Data;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using MinhaApiComSQLite.Data;
+using MinhaApiComSQLite.Data.Repositories;
+using MinhaApiComSQLite.Data.Repositories.Interfaces;
+using MinhaApiComSQLite.Models;
+using System.Reflection;
+using System.Text;
+using System.Text.Json.Serialization;
 
 namespace MinhaApiComSQLite
 {
@@ -37,6 +37,9 @@ namespace MinhaApiComSQLite
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(options =>
             {
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                options.IncludeXmlComments(xmlPath);
                 options.SwaggerDoc("v1", new OpenApiInfo
                 {
                     Title = "Minha API com SQLite",
@@ -44,15 +47,67 @@ namespace MinhaApiComSQLite
                     Description = "API para gerenciar produtos com SQLite",
                     Contact = new OpenApiContact
                     {
-                        Name = "Seu Nome",
-                        Email = "seu.email@exemplo.com",
-                        Url = new Uri("https://seuwebsite.com")
+                        Name = "Matheus Guilhermetti",
+                        Email = "matheusguilhermetti59@gmail.com",
+                        Url = new Uri("https://github.com/guilhermetti")
+                    }
+                });
+
+                // JWT Bearer
+                options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+                {
+                    Description = "Insira o token JWT no formato: Bearer {seu token}",
+                    Name = "Authorization",
+                    In = ParameterLocation.Header,
+                    Type = SecuritySchemeType.ApiKey,
+                    Scheme = "Bearer"
+                });
+                options.AddSecurityRequirement(new OpenApiSecurityRequirement
+                {
+                    {
+                        new OpenApiSecurityScheme {
+                            Reference = new OpenApiReference {
+                                Type = ReferenceType.SecurityScheme,
+                                Id = "Bearer"
+                            }
+                        },
+                        Array.Empty<string>()
                     }
                 });
             });
 
+            // Injeção de Depêndência
+            services.AddTransient<TokenService>();
+            services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IProductRepository, ProductRepository>();
+
             // Configurar controladores e endpoints
-            services.AddControllers();
+            services.AddControllers()
+                .AddJsonOptions(options =>
+                {
+                    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                });
+
+            // JWT
+            services.AddAuthentication(options =>
+                {
+                    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                })
+                .AddJwtBearer(options =>
+                {
+                    var key = Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]!);
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(key)
+                    };
+                });
         }
 
         // Método chamado pela ASP.NET Core para configurar o pipeline HTTP.
@@ -70,9 +125,9 @@ namespace MinhaApiComSQLite
             }
 
             app.UseHttpsRedirection(); // Força HTTPS
-            app.UseRouting();          // Habilita o roteamento
-            app.UseAuthorization();    // Habilita a autorização
-
+            app.UseRouting(); // Habilita o roteamento
+            app.UseAuthentication(); // Habilita a autenticação
+            app.UseAuthorization(); // Habilita a autorização
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers(); // Mapeia controladores
