@@ -24,9 +24,12 @@ namespace MinhaApiComSQLite.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<PagedResult<ProductDTO>> GetPaged(int pageNumber, int pageSize)
+        public async Task<PagedResult<ProductDTO>> GetPaged(int pageNumber, int pageSize, int? categoryId)
         {
             var query = context.Products.Include(p => p.Category).AsQueryable();
+
+            if (categoryId.HasValue)
+                query = query.Where(p => p.CategoryId == categoryId.Value);
 
             var totalItems = await query.CountAsync();
 
@@ -53,6 +56,7 @@ namespace MinhaApiComSQLite.Data.Repositories
                 PageSize = pageSize
             };
         }
+
 
         public async Task<Product> GetId(int id)
         {

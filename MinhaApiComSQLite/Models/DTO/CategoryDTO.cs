@@ -3,8 +3,8 @@
     public class CategoryDTO
     {
         public int Id { get; set; }
-        public string Nome { get; set; } = string.Empty;
+        public string Name { get; set; } = string.Empty;
 
-        public List<ProductSimpleDTO> Produtos { get; set; } = new();
+        public List<ProductSimpleDTO> Products { get; set; } = new();
     }
 }

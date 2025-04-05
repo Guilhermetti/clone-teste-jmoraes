@@ -35,7 +35,7 @@ namespace MinhaApiComSQLite.Controllers
                 var products = await repository.GetAll();
                 if (!products.Any())
                 {
-                    logger.LogWarning("Nenhum produto cadastrado encontrado.");
+                    logger.LogWarning("Nenhum produto cadastrado.");
                     return NotFound(new Notification
                     {
                         Key = "Produto",
@@ -69,11 +69,11 @@ namespace MinhaApiComSQLite.Controllers
         [ProducesResponseType(typeof(PagedResult<ProductDTO>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(Notification), StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<ActionResult<PagedResult<ProductDTO>>> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10)
+        public async Task<ActionResult<PagedResult<ProductDTO>>> GetPaged([FromQuery] int pageNumber = 1, [FromQuery] int pageSize = 10, [FromQuery] int? categoryId = null)
         {
             try
             {
-                var result = await repository.GetPaged(pageNumber, pageSize);
+                var result = await repository.GetPaged(pageNumber, pageSize, categoryId);
                 if (!result.Items.Any())
                 {
                     logger.LogWarning("Nenhum produto encontrado na página {PageNumber}.", pageNumber);
@@ -172,6 +172,8 @@ namespace MinhaApiComSQLite.Controllers
                     });
                 }
 
+                command.Name = StringHelper.Capitalize(command.Name);
+
                 var productToInsert = new Product
                 {
                     Name = command.Name,
@@ -243,6 +245,8 @@ namespace MinhaApiComSQLite.Controllers
                         Message = "Produto não encontrado."
                     });
                 }
+
+                command.Name = StringHelper.Capitalize(command.Name);
 
                 productToUpdate.Name = command.Name;
                 productToUpdate.Description = command.Description;

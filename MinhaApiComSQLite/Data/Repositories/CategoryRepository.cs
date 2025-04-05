@@ -14,8 +14,8 @@ namespace MinhaApiComSQLite.Data.Repositories
                     .Select(c => new CategoryDTO
                     {
                         Id = c.Id,
-                        Nome = c.Name,
-                        Produtos = c.Products.Select(p => new ProductSimpleDTO
+                        Name = c.Name,
+                        Products = c.Products.Select(p => new ProductSimpleDTO
                         {
                             Id = p.Id,
                             Name = p.Name,
@@ -40,8 +40,8 @@ namespace MinhaApiComSQLite.Data.Repositories
                 return new CategoryDTO
                 {
                     Id = category.Id,
-                    Nome = category.Name,
-                    Produtos = category.Products.Select(p => new ProductSimpleDTO
+                    Name = category.Name,
+                    Products = category.Products.Select(p => new ProductSimpleDTO
                     {
                         Id = p.Id,
                         Name = p.Name,

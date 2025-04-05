@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinhaApiComSQLite.Controllers.Validators.Category;
 using MinhaApiComSQLite.Data.Repositories.Interfaces;
+using MinhaApiComSQLite.Helpers;
 using MinhaApiComSQLite.Models;
 
 namespace MinhaApiComSQLite.Controllers
@@ -34,7 +35,7 @@ namespace MinhaApiComSQLite.Controllers
                     return NotFound(new Notification
                     {
                         Key = "Categoria",
-                        Message = "Não há categorias cadastradas."
+                        Message = "Nenhuma categoria cadastrada."
                     });
                 }
 
@@ -62,7 +63,7 @@ namespace MinhaApiComSQLite.Controllers
         {
             try
             {
-                var category = await repository.GetId(id);
+                var category = await repository.GetIdDTO(id);
                 if (category == null)
                 {
                     logger.LogWarning("Categoria com ID {CategoryId} não encontrada.", id);
@@ -104,6 +105,8 @@ namespace MinhaApiComSQLite.Controllers
                     logger.LogWarning("Validação falhou ao tentar inserir categoria. Notificações: {@Notifications}", command.Notifications);
                     return BadRequest(command.Notifications);
                 }
+
+                command.Name = StringHelper.Capitalize(command.Name);
 
                 var category = await repository.GetName(command.Name);
                 if (category != null)
@@ -154,6 +157,8 @@ namespace MinhaApiComSQLite.Controllers
                     logger.LogWarning("Validação falhou ao atualizar categoria. Notificações: {@Notifications}", command.Notifications);
                     return BadRequest(command.Notifications);
                 }
+
+                command.Name = StringHelper.Capitalize(command.Name);
 
                 var existingCategory = await repository.GetName(command.Name);
                 if (existingCategory != null && existingCategory.Id != command.Id)
