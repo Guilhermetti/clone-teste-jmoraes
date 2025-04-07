@@ -113,6 +113,11 @@ Paginação por categoria.
 
 #### ❌ DELETE ```/api/product/{id}```
 
+### 📁 Relatório
+
+#### 🔍 GET ```/api/report/summary```
+Retorna dados agregados da API, incluindo: total de produtos cadastrados, média de preços dos produtos, valor total dos produtos no estoque, total de categorias e quantidade de produtos por categoria
+
 ## 🧰 Tecnologias Utilizadas
 - ASP.NET Core 8.0
 - SQLite (via Entity Framework Core)
