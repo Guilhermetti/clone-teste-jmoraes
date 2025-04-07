@@ -80,6 +80,7 @@ namespace MinhaApiComSQLite
             services.AddTransient<TokenService>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IReportRepository, ReportRepository>();
 
             // Configurar controladores e endpoints
             services.AddControllers()
