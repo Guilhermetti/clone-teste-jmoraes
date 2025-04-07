@@ -1,37 +1,122 @@
-# 🧪 API .NET - Teste de Desenvolvedor | JMoraes
+# 🛠️ API RESTful - Teste Desenvolvedor Pleno (.NET 8 + SQLite)
 
-Este repositório contém uma API desenvolvida com **ASP.NET Core 8** e **SQLite**, criada como parte de um **teste técnico para a empresa JMoraes**. A aplicação oferece um CRUD completo para **produtos** e **categorias**, com autenticação via **JWT** e documentação **Swagger**.
+Este projeto consiste em uma API RESTful desenvolvida com **C# ASP.NET Core 8.0** e **SQLite**. O objetivo é demonstrar domínio de boas práticas de arquitetura, autenticação JWT, validações e operações básicas de CRUD para produtos e categorias.
 
 ---
 
-## 🗂️ Estrutura do Projeto
+## 🚀 Como executar o projeto
+
+### ✅ Requisitos
+
+- [.NET 8 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+- [Visual Studio 2022+](https://visualstudio.microsoft.com/) ou outro editor compatível
+- Git (opcional, para clonar o repositório)
+
+### ⚙️ Passo a passo
+
+1. Clone o projeto:
+   ```bash
+   git clone https://github.com/seu-usuario/seu-repositorio.git
+   cd seu-repositorio
+   ```
+2. Restaure os pacotes e compile:
+   ```bash
+   dotnet clean
+   dotnet build
+   ```
+3. Configure o UserSecrets para armazenar a chave JWT (já configurado no projeto):
+   ```bash
+   dotnet user-secrets set "Jwt:Key" "sua-chave"
+   ```
+4. Execute a API:
+   ```bash
+   dotnet run
+   ```
+A API estará disponível em: https://localhost:5001
+
+## 🔐 Autenticação
+
+A autenticação é feita via JWT. Para obter um token, use:
+
+### 🔓 ```POST /api/auth/login```
+**Body:**
+```bash
+{
+  "username": "admin",
+  "password": "admin"
+}
+```
+Resposta:
+```bash
+{
+  "token": "<seu_token_jwt>"
+}
+```
+
+Use este token em chamadas protegidas no cabeçalho:
 
 ```bash
-├── Controllers/              # Endpoints da API
-│   ├── AuthController.cs
-│   ├── CategoryController.cs
-│   ├── ProductController.cs
-│   └── Validators/
-│       ├── Category/
-│       └── Product/
-│
-├── Data/
-│   ├── Mapping/              # Mapeamentos EF Core
-│   ├── Migrations/           # Histórico do banco SQLite
-│   ├── Repositories/         # Interfaces e implementações de acesso a dados
-│   └── AppDbContext.cs
-│
-├── Helpers/
-│   └── PagedResult.cs        # Classe de paginação
-│
-├── Models/                   # Entidades e DTOs
-│   ├── DTO/
-│   ├── BaseModel.cs
-│   ├── Category.cs
-│   ├── Product.cs
-│   ├── User.cs
-│   └── TokenService.cs
-│
-├── appsettings.json          # Configurações do projeto
-├── Program.cs
-├── Startup.cs
+Authorization: Bearer <seu_token_jwt>
+```
+
+## 📦 Endpoints principais
+
+### 📁 Categorias
+
+#### 🔍 GET ```/api/category```
+Retorna todas as categorias.
+
+#### ➕ POST ```/api/category```
+**Body:**
+```bash
+{
+  "name": "Eletrônicos"
+}
+```
+#### ✏️ PUT ```/api/category```
+```bash
+{
+  "id": 1,
+  "name": "Livros"
+}
+```
+#### ❌ DELETE ```/api/product/{id}```
+
+### 📦 Produtos
+
+#### 🔍 GET ```/api/product```
+Lista todos os produtos.
+
+#### 📄 GET ```/api/product/paged?pageNumber=1&pageSize=10&categoryId=2```
+Paginação por categoria.
+
+#### ➕ POST ```/api/product```
+```bash
+{
+  "name": "Notebook",
+  "description": "Notebook Dell XPS",
+  "price": 8999.99,
+  "categoryId": 2
+}
+```
+
+#### ✏️ PUT ```/api/product```
+```bash
+{
+  "id": 5,
+  "name": "Notebook Atualizado",
+  "description": "Descrição atualizada",
+  "price": 7999.99,
+  "categoryId": 2
+}
+```
+
+#### ❌ DELETE ```/api/product/{id}```
+
+## 🧰 Tecnologias Utilizadas
+- ASP.NET Core 8.0
+- SQLite (via Entity Framework Core)
+- Autenticação JWT
+- Flunt (validações)
+- Swagger (documentação automática)
+- Newtonsoft.Json
