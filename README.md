@@ -1,6 +1,6 @@
 # 🛠️ API RESTful - Teste Desenvolvedor Pleno (.NET 8 + SQLite)
 
-Este projeto consiste em uma API RESTful desenvolvida com **C# ASP.NET Core 8.0** e **SQLite**. O objetivo é demonstrar domínio de boas práticas de arquitetura, autenticação JWT, validações e operações básicas de CRUD para produtos e categorias.
+Este projeto consiste em uma API RESTful desenvolvida com **C# ASP.NET Core 8.0** e **SQLite**. O objetivo é demonstrar domínio de boas práticas de arquitetura, autenticação JWT, validações e operações básicas de CRUD para produtos e categorias. O projeto é consumido pelo aplicativo desktop [clone-teste-jmoraes-client](https://github.com/Guilhermetti/clone-teste-jmoraes-client)
 
 ---
 
