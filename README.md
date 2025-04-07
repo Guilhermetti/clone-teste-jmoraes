@@ -24,7 +24,7 @@ Este projeto consiste em uma API RESTful desenvolvida com **C# ASP.NET Core 8.0*
    dotnet clean
    dotnet build
    ```
-3. Configure o UserSecrets para armazenar a chave JWT (já configurado no projeto):
+3. Configure o UserSecrets para armazenar a chave JWT:
    ```bash
    dotnet user-secrets set "Jwt:Key" "sua-chave"
    ```
