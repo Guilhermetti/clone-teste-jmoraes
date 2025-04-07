@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MinhaApiComSQLite.Controllers.Validators.Category;
 using MinhaApiComSQLite.Data.Repositories.Interfaces;
-using MinhaApiComSQLite.Helpers;
 using MinhaApiComSQLite.Models;
 
 namespace MinhaApiComSQLite.Controllers

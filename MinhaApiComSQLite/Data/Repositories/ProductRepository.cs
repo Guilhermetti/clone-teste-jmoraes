@@ -57,7 +57,6 @@ namespace MinhaApiComSQLite.Data.Repositories
             };
         }
 
-
         public async Task<Product> GetId(int id)
         {
             try

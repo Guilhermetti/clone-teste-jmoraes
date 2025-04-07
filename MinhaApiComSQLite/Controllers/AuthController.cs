@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MinhaApiComSQLite.Models;
+using MinhaApiComSQLite.Services;
 
 namespace MinhaApiComSQLite.Controllers
 {

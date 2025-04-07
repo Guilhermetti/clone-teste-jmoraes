@@ -10,7 +10,7 @@ using Microsoft.OpenApi.Models;
 using MinhaApiComSQLite.Data;
 using MinhaApiComSQLite.Data.Repositories;
 using MinhaApiComSQLite.Data.Repositories.Interfaces;
-using MinhaApiComSQLite.Models;
+using MinhaApiComSQLite.Services;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
